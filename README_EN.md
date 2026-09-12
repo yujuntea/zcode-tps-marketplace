@@ -73,11 +73,13 @@ Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from a
 
 3. **Pick the plugin folder**: on first launch SwiftBar asks you to choose a plugin folder — select the dedicated folder printed in step 1 (by default `~/.zcode/plugins-data/zcode-tps/swiftbar`).
 
-4. **Done**: the ⚡ speed appears in the menu bar immediately. If it doesn't (the first-launch wizard has a known quirk in some SwiftBar builds), run this once and restart SwiftBar:
+4. **Done**: the ⚡ speed appears in the menu bar immediately. If not, in order:
+   - The menu bar shows a plain `SwiftBar` placeholder instead of a speed: SwiftBar occasionally skips importing files that already exist — nudge it with `touch ~/.zcode/plugins-data/zcode-tps/swiftbar/zcode-tps.3s.sh`, or restart SwiftBar once
+   - Still nothing (the first-launch wizard has a known quirk in some SwiftBar builds): run this once and restart SwiftBar:
 
-   ```
-   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/.zcode/plugins-data/zcode-tps/swiftbar"
-   ```
+     ```
+     defaults write com.ameba.SwiftBar PluginDirectory "$HOME/.zcode/plugins-data/zcode-tps/swiftbar"
+     ```
 
 > Note: keep using the dedicated folder above as the plugin folder. Do **not** pick `~/Library/Application Support/SwiftBar` (SwiftBar's own data root) — its internal `Plugins` sync folder gets traversed recursively, which loads the same script twice as two menu items.
 >
