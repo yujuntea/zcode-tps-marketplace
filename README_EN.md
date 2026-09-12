@@ -21,7 +21,7 @@ ZCode doesn't show how fast the model is generating — you just wait. Tools lik
 
 Data is **read-only** from ZCode's local database (`~/.zcode/cli/db/db.sqlite`). No writes, no network, no background processes.
 
-## Install (3 steps, ~1 minute)
+## Install the plugin (3 steps, ~1 minute)
 
 > Prerequisite: open any workspace in ZCode (the plugin management UI requires a workspace).
 
@@ -35,23 +35,53 @@ Data is **read-only** from ZCode's local database (`~/.zcode/cli/db/db.sqlite`).
 
 2. **Install**: under the "Personal" section, find **ZCode Tps** and click **Install** (enabled by default).
 
-3. **Use**: in any session, type:
+3. **Use**: in any session, type `/speed` to see the stats panel.
+
+After installing, set up the **SwiftBar menu bar speed** below — it's the most convenient way to use the plugin day to day.
+
+## ⭐ Three ways to watch the speed live
+
+### Way 1: macOS menu bar, always visible (SwiftBar — recommended)
+
+Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from any app:
+
+![Menu bar speed](docs/menubar.png)
+
+**What you get:**
+
+- The menu bar shows a figure like `⚡ 497.0 tok/s`, **auto-refreshed every 3 seconds** — it ticks whenever the model completes a request
+- **Click it for a dropdown** with details: latest request (tokens / speed / age), current model, session average, per-model speed & TTFT, cache hit rate, tool time, current session title, plus a one-click Refresh
+- On multi-display setups the icon **follows the screen you are working on** — zero configuration
+
+**One-time setup (~3 minutes):**
+
+1. **Generate the menu-bar script**: in a ZCode session, type:
 
    ```
-   /speed
+   /speed --setup-menu
    ```
 
-## Usage
+   This copies the stats script to a stable path and creates the menu-bar script in SwiftBar's default plugin folder (`~/Library/Application Support/SwiftBar/zcode-tps.3s.sh`).
 
-```
-/speed                    # stats panel for the current session (default)
-/speed --list-sessions    # list recent sessions to pick from
-/speed --session <id>     # inspect a specific session
-/speed --watch            # get the live-refresh terminal command (see below)
-/speed --json             # machine-readable JSON output
-```
+2. **Install SwiftBar** (an open-source macOS menu bar tool; the menu-bar display is built on it):
 
-### Live refresh inside the editor (recommended)
+   ```
+   brew install --cask swiftbar
+   ```
+
+   No Homebrew? Download the dmg from [swiftbar.app](https://swiftbar.app) and drag it into Applications.
+
+3. **Pick the plugin folder**: on first launch SwiftBar asks you to choose a plugin folder — select the path printed in step 1 (by default `~/Library/Application Support/SwiftBar`).
+
+4. **Done**: the ⚡ speed appears in the menu bar immediately. If it doesn't (the first-launch wizard has a known quirk in some SwiftBar builds), run this once and restart SwiftBar:
+
+   ```
+   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/Library/Application Support/SwiftBar"
+   ```
+
+> After upgrading the plugin, re-run `/speed --setup-menu` once to refresh the script.
+
+### Way 2: Live refresh in the ZCode built-in terminal (no extra apps)
 
 Paste this into a **ZCode built-in terminal tab** — the speed line refreshes every 2 seconds next to your chat:
 
@@ -61,14 +91,16 @@ Paste this into a **ZCode built-in terminal tab** — the speed line refreshes e
 python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 ```
 
-- `Ctrl+C` to stop; add `--panel` for the full-panel view
-- Or just type `/speed --watch` and the plugin hands you this command
+`Ctrl+C` to stop; add `--panel` for the full-panel view. Or type `/speed --watch` and the plugin hands you this command.
 
-### Menu bar (optional, macOS)
+### Way 3: On-demand `/speed` (zero setup)
 
-Install [SwiftBar](https://swiftbar.app/), then run `/speed --setup-menu` — a ⚡ live speed appears in your menu bar (3s refresh):
-
-![Menu bar speed](docs/menubar.png)
+```
+/speed                    # stats panel for the current session (default)
+/speed --list-sessions    # list recent sessions to pick from
+/speed --session <id>     # inspect a specific session
+/speed --json             # machine-readable JSON output
+```
 
 ## Example output
 
@@ -86,7 +118,7 @@ Install [SwiftBar](https://swiftbar.app/), then run `/speed --setup-menu` — a 
   子代理        reviewer ×31: 54.9 tok/s
 ```
 
-(Values are labeled in Chinese; the numbers are universal — tok/s, request counts, TTFT seconds, cache %.)
+(Labels are in Chinese; the numbers are universal — tok/s, request counts, TTFT seconds, cache %.)
 
 ## Measurement semantics (why the numbers are trustworthy)
 

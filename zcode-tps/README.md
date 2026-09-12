@@ -28,4 +28,6 @@ ZCode 模型执行速度统计插件。安装后在会话内输入 `/speed` 即�
 python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 ```
 
+菜单栏常驻（macOS，推荐的日常方式）：先运行 `/speed --setup-menu` 生成菜单栏脚本，再安装 SwiftBar（`brew install --cask swiftbar`），首次启动向导选择插件目录时选它输出的路径——菜单栏即出现 ⚡ 实时速度（每 3 秒刷新）。详细步骤、装好后的效果与排障，见仓库根目录 README 的「方式一」一节。
+
 > 插件升级后若已装过稳定副本，请重跑 `/speed --setup-menu` 刷新（定位链取最新文件，多数情况自动生效）。

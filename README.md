@@ -19,7 +19,7 @@ ZCode 运行时看不到模型生成速度——只能被动等结果。DSH（de
 
 数据**只读**自 ZCode 本地数据库（`~/.zcode/cli/db/db.sqlite`），不写库、不联网、无后台进程。
 
-## 安装（三步，约 1 分钟）
+## 安装插件（三步，约 1 分钟）
 
 > 前置：打开任意一个 ZCode 工作区（插件管理页需要工作区环境）。
 
@@ -33,25 +33,53 @@ ZCode 运行时看不到模型生成速度——只能被动等结果。DSH（de
 
 2. **安装插件**：在"个人"分段找到 **ZCode Tps**，点 **安装**（默认自动启用）。
 
-3. **使用**：在任意会话输入：
+3. **使用**：在任意会话输入 `/speed`，即可看到统计面板。
+
+安装完成后，推荐按下面配置 **SwiftBar 菜单栏常驻速度**——日常体验最好的一种方式。
+
+## ⭐ 实时查看速度的三种方式
+
+### 方式一：macOS 菜单栏常驻（SwiftBar，最推荐）
+
+装好后在**屏幕顶部菜单栏**常驻一个 ⚡ 实时速度，任何应用下抬头可见：
+
+![菜单栏速度](docs/menubar.png)
+
+**装好后的效果：**
+
+- 菜单栏常驻显示 `⚡ 497.0 tok/s` 这样一个数字，**每 3 秒自动刷新**——模型每完成一次请求，数字就跟着跳动
+- **点击它有下拉明细**：最近一次请求（token 数/速度/多久前）、当前模型、会话平均、各模型分段速度与 TTFT、缓存命中率、工具用时、当前会话标题，还有一键「刷新」
+- 多显示器环境下图标**跟随你正在使用的屏幕**，不需要任何操作
+
+**安装配置步骤（一次性，约 3 分钟）：**
+
+1. **生成菜单栏脚本**：在 ZCode 会话里输入：
 
    ```
-   /speed
+   /speed --setup-menu
    ```
 
-   即可看到统计面板。
+   它会把统计脚本复制到稳定路径，并在 SwiftBar 默认插件目录生成菜单栏脚本（`~/Library/Application Support/SwiftBar/zcode-tps.3s.sh`）。
 
-## 使用方式
+2. **安装 SwiftBar**（一个开源的 macOS 菜单栏定制工具，本插件的菜单栏显示基于它）：
 
-```
-/speed                    # 当前会话统计面板（默认）
-/speed --list-sessions    # 列出最近会话，方便找到想看的会话
-/speed --session <id>     # 指定某个会话查看
-/speed --watch            # 获取终端实时刷新命令（见下）
-/speed --json             # 机器可读 JSON 输出
-```
+   ```
+   brew install --cask swiftbar
+   ```
 
-### 编辑器内实时刷新（推荐）
+   没装 Homebrew 也可以去 [swiftbar.app](https://swiftbar.app) 下载 dmg 拖进"应用程序"。
+
+3. **选择插件目录**：首次启动 SwiftBar 会弹向导让你"选择插件目录"，选这一步 1 输出的路径（默认就是 `~/Library/Application Support/SwiftBar`），点确定。
+
+4. **完成**：菜单栏立即出现 ⚡ 速度。如果没有出现（SwiftBar 个别版本的首启向导有已知小毛病），执行下面一条命令再重启 SwiftBar 即可：
+
+   ```
+   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/Library/Application Support/SwiftBar"
+   ```
+
+> 插件升级后，重跑一次 `/speed --setup-menu` 刷新脚本即可。
+
+### 方式二：ZCode 内置终端实时刷新（不想装额外软件）
 
 把这条命令粘贴到 **ZCode 内置终端标签页**，速度行每 2 秒自动刷新，与聊天并排可见：
 
@@ -61,14 +89,16 @@ ZCode 运行时看不到模型生成速度——只能被动等结果。DSH（de
 python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 ```
 
-- `Ctrl+C` 退出；追加 `--panel` 显示完整面板版
-- 也可以直接输 `/speed --watch`，插件会把这条命令给你
+`Ctrl+C` 退出；追加 `--panel` 显示完整面板版。也可以直接输 `/speed --watch`，插件会把这条命令给你。
 
-### 菜单栏常驻（可选，macOS）
+### 方式三：`/speed` 按需查看（零配置）
 
-安装 [SwiftBar](https://swiftbar.app/) 后运行 `/speed --setup-menu`，菜单栏出现 ⚡ 实时速度（3 秒刷新）：
-
-![菜单栏速度](docs/menubar.png)
+```
+/speed                    # 当前会话统计面板（默认）
+/speed --list-sessions    # 列出最近会话，方便找到想看的会话
+/speed --session <id>     # 指定某个会话查看
+/speed --json             # 机器可读 JSON 输出
+```
 
 ## 输出示例
 

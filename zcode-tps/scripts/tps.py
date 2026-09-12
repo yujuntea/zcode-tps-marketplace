@@ -534,23 +534,25 @@ def setup_menu():
         'exec python3 "$TPS" --menubar "$@"',
         "",
     ])
-    env_set = "SWIFTBAR_PLUGIN_DIR" in os.environ
-    target_dir = SWIFTBAR_DIR if (env_set or SWIFTBAR_DIR.is_dir()) else STABLE_DIR / "swiftbar"
+    # 总是写入 SwiftBar 默认插件目录（不存在则创建）——"先 setup、后装 SwiftBar"
+    # 的新用户在首启向导里选该目录即可直接点亮；SWIFTBAR_PLUGIN_DIR 环境变量可覆盖。
+    target_dir = SWIFTBAR_DIR
     target_dir.mkdir(parents=True, exist_ok=True)
     sh = target_dir / "zcode-tps.3s.sh"
     sh.write_text(script)
     sh.chmod(0o755)
+    swiftbar_installed = Path("/Applications/SwiftBar.app").exists()
     print(f"✓ 稳定副本: {dst}")
-    if env_set or SWIFTBAR_DIR.is_dir():
-        print(f"✓ SwiftBar 脚本: {sh} (文件名 .3s = 每 3 秒刷新)")
-        print("  若菜单栏未出现，请确认 SwiftBar 插件目录设置指向上述路径")
+    print(f"✓ SwiftBar 脚本: {sh} (文件名 .3s = 每 3 秒刷新)")
+    if swiftbar_installed:
+        print("✓ 已检测到 SwiftBar。若菜单栏未显示 ⚡ 速度，执行后重启 SwiftBar：")
+        print(f'  defaults write com.ameba.SwiftBar PluginDirectory "{target_dir}"')
     else:
-        print(f"○ 未检测到 SwiftBar（{SWIFTBAR_DIR} 不存在）")
-        print(f"  脚本已生成: {sh}")
-        print("  安装 SwiftBar 后 (brew install swiftbar --cask)，把脚本复制到 SwiftBar 插件目录，")
-        print("  或设置环境变量 SWIFTBAR_PLUGIN_DIR 后重跑 /speed --setup-menu")
-    print("  备选（无需 SwiftBar）: watch -n2 python3", dst, "--panel")
+        print("○ 未检测到 SwiftBar。安装并配置两步即可点亮菜单栏：")
+        print("  1) brew install --cask swiftbar   （或从 https://swiftbar.app 下载）")
+        print(f"  2) 首次启动向导选择插件目录时，选择: {target_dir}")
     print("  提示: 插件升级后请重跑 --setup-menu 刷新稳定副本")
+    print("  备选（无 SwiftBar）: 在 ZCode 内置终端运行  python3", dst, "--watch")
 
 
 def snapshot(out_path, stats):
