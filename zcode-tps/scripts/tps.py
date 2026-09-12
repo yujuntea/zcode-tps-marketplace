@@ -534,9 +534,13 @@ def setup_menu():
         'exec python3 "$TPS" --menubar "$@"',
         "",
     ])
-    # 总是写入 SwiftBar 默认插件目录（不存在则创建）——"先 setup、后装 SwiftBar"
-    # 的新用户在首启向导里选该目录即可直接点亮；SWIFTBAR_PLUGIN_DIR 环境变量可覆盖。
-    target_dir = SWIFTBAR_DIR
+    # 插件目录必须用独立专用目录（只含本插件脚本）。不要选 SwiftBar 的数据根目录
+    # （~/Library/Application Support/SwiftBar）：其内部 Plugins 同步目录会被递归遍历、
+    # 且同步逻辑有 bug（issue #442），会把镜像副本也加载成第二个菜单项。
+    if "SWIFTBAR_PLUGIN_DIR" in os.environ:
+        target_dir = SWIFTBAR_DIR
+    else:
+        target_dir = STABLE_DIR / "swiftbar"
     target_dir.mkdir(parents=True, exist_ok=True)
     sh = target_dir / "zcode-tps.3s.sh"
     sh.write_text(script)

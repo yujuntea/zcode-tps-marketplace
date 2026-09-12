@@ -61,7 +61,7 @@ Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from a
    /speed --setup-menu
    ```
 
-   This copies the stats script to a stable path and creates the menu-bar script in SwiftBar's default plugin folder (`~/Library/Application Support/SwiftBar/zcode-tps.3s.sh`).
+   This copies the stats script to a stable path (`~/.zcode/plugins-data/zcode-tps/tps.py`) and creates the menu-bar script in a dedicated plugin folder (`~/.zcode/plugins-data/zcode-tps/swiftbar/zcode-tps.3s.sh`).
 
 2. **Install SwiftBar** (an open-source macOS menu bar tool; the menu-bar display is built on it):
 
@@ -71,14 +71,16 @@ Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from a
 
    No Homebrew? Download the dmg from [swiftbar.app](https://swiftbar.app) and drag it into Applications.
 
-3. **Pick the plugin folder**: on first launch SwiftBar asks you to choose a plugin folder — select the path printed in step 1 (by default `~/Library/Application Support/SwiftBar`).
+3. **Pick the plugin folder**: on first launch SwiftBar asks you to choose a plugin folder — select the dedicated folder printed in step 1 (by default `~/.zcode/plugins-data/zcode-tps/swiftbar`).
 
 4. **Done**: the ⚡ speed appears in the menu bar immediately. If it doesn't (the first-launch wizard has a known quirk in some SwiftBar builds), run this once and restart SwiftBar:
 
    ```
-   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/Library/Application Support/SwiftBar"
+   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/.zcode/plugins-data/zcode-tps/swiftbar"
    ```
 
+> Note: keep using the dedicated folder above as the plugin folder. Do **not** pick `~/Library/Application Support/SwiftBar` (SwiftBar's own data root) — its internal `Plugins` sync folder gets traversed recursively, which loads the same script twice as two menu items.
+>
 > After upgrading the plugin, re-run `/speed --setup-menu` once to refresh the script.
 
 ### Way 2: Live refresh in the ZCode built-in terminal (no extra apps)

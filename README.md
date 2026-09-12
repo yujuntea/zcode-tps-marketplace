@@ -59,7 +59,7 @@ ZCode 运行时看不到模型生成速度——只能被动等结果。DSH（de
    /speed --setup-menu
    ```
 
-   它会把统计脚本复制到稳定路径，并在 SwiftBar 默认插件目录生成菜单栏脚本（`~/Library/Application Support/SwiftBar/zcode-tps.3s.sh`）。
+   它会把统计脚本复制到稳定路径（`~/.zcode/plugins-data/zcode-tps/tps.py`），并在专用插件目录生成菜单栏脚本（`~/.zcode/plugins-data/zcode-tps/swiftbar/zcode-tps.3s.sh`）。
 
 2. **安装 SwiftBar**（一个开源的 macOS 菜单栏定制工具，本插件的菜单栏显示基于它）：
 
@@ -69,14 +69,16 @@ ZCode 运行时看不到模型生成速度——只能被动等结果。DSH（de
 
    没装 Homebrew 也可以去 [swiftbar.app](https://swiftbar.app) 下载 dmg 拖进"应用程序"。
 
-3. **选择插件目录**：首次启动 SwiftBar 会弹向导让你"选择插件目录"，选这一步 1 输出的路径（默认就是 `~/Library/Application Support/SwiftBar`），点确定。
+3. **选择插件目录**：首次启动 SwiftBar 会弹向导让你"选择插件目录"，选这一步 1 输出的专用目录（默认 `~/.zcode/plugins-data/zcode-tps/swiftbar`），点确定。
 
 4. **完成**：菜单栏立即出现 ⚡ 速度。如果没有出现（SwiftBar 个别版本的首启向导有已知小毛病），执行下面一条命令再重启 SwiftBar 即可：
 
    ```
-   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/Library/Application Support/SwiftBar"
+   defaults write com.ameba.SwiftBar PluginDirectory "$HOME/.zcode/plugins-data/zcode-tps/swiftbar"
    ```
 
+> 注意：插件目录请保持使用上面的专用目录，**不要**选 `~/Library/Application Support/SwiftBar`（SwiftBar 的数据根目录）——其内部的 Plugins 同步目录会被递归遍历，导致同一脚本出现两个菜单项。
+>
 > 插件升级后，重跑一次 `/speed --setup-menu` 刷新脚本即可。
 
 ### 方式二：ZCode 内置终端实时刷新（不想装额外软件）
