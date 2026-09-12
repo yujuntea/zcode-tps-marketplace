@@ -85,6 +85,8 @@ Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from a
 
 ### Way 2: Live refresh in the ZCode built-in terminal (no extra apps)
 
+> Prerequisite: run `/speed --setup-menu` once in a session first (copies the script to a stable path, one-time).
+
 Paste this into a **ZCode built-in terminal tab** — the speed line refreshes every 2 seconds next to your chat:
 
 ![Terminal live refresh](docs/watch-line.png)

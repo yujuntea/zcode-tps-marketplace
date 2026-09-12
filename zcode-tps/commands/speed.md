@@ -20,5 +20,5 @@ argument-hint: "[--list-sessions] [--setup-menu] [--watch] [--json] [--menubar] 
 python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 ```
 
-并说明：该终端标签页会每 2 秒自动刷新当前会话的速度单行（当前模型/均值/TTFT/缓存命中），与聊天并排可见；`Ctrl+C` 退出；追加 `--panel` 可显示完整面板版。
+并说明：该终端标签页会每 2 秒自动刷新当前会话的速度单行（当前模型/均值/TTFT/缓存命中），与聊天并排可见；`Ctrl+C` 退出；追加 `--panel` 可显示完整面板版。若用户运行后报"稳定副本缺失/No such file"（尚未跑过 `--setup-menu`），提示先执行一次 `/speed --setup-menu` 再用该命令。
 若面板显示的会话不是用户想看的会话，提示可用 `/speed --list-sessions` 列出最近会话、再用 `/speed --session <id>` 指定。若两处路径都找不到脚本，说明插件未正确安装：请用户到 设置 → 插件管理 确认 zcode-tps 已安装并启用后重试。

@@ -510,6 +510,7 @@ def list_sessions(conn, n=10):
     for last_ms, sid, title, reqs, sub in out[:n]:
         ts = datetime.fromtimestamp(last_ms / 1000).strftime("%m-%d %H:%M")
         L.append(f"{ts:<14} {reqs:>5} {sub:>4}  {title}  [{sid[:24]}…]")
+    L.append("提示: 复制方括号内的 id 前缀即可 --session 使用（前缀唯一即自动匹配）")
     return "\n".join(L)
 
 # ---------------------------------------------------------------- setup-menu / snapshot
@@ -573,15 +574,29 @@ def snapshot(out_path, stats):
 # ---------------------------------------------------------------- main
 
 
-def get_stats(args):
-    conn = connect_db()
-    if conn is not None and db_usable(conn):
-        sid = args.session or pick_default_session(conn)
+def resolve_session(conn, sid):
+    """精确匹配；失败则按前缀匹配（配合 --list-sessions 显示的截断 id）。"""
+    row = conn.execute("SELECT id FROM session WHERE id=?", (sid,)).fetchone()
+    if row:
+        return row[0], None
+    rows = [r[0] for r in conn.execute(
+        "SELECT id FROM session WHERE id LIKE ?", (sid + "%",))]
+    if len(rows) == 1:
+        return rows[0], None
+    if len(rows) > 1:
+        sample = ", ".join(r[:28] + "…" for r in rows[:5])
+        return None, f"会话 id 前缀不唯一（匹配 {len(rows)} 个）: {sample}"
+    return None, f"未找到会话: {sid}"
+
+
+def get_stats(args, conn=None, db_ok=False, sid=None):
+    if db_ok:
         if sid is None:
-            return None, conn
-        return load_stats_db(conn, sid), conn
-    st = load_stats_rollout(args.session)
-    return st, conn
+            sid = pick_default_session(conn)
+            if sid is None:
+                return None
+        return load_stats_db(conn, sid)
+    return load_stats_rollout(args.session)
 
 
 def main(argv=None):
@@ -612,7 +627,16 @@ def main(argv=None):
         print(list_sessions(conn))
         return 0
 
-    st, _conn = get_stats(args)
+    conn = connect_db()
+    db_ok = conn is not None and db_usable(conn)
+    sid = args.session
+    if db_ok and sid:
+        sid, err = resolve_session(conn, sid)
+        if err:
+            print(err, file=sys.stderr)
+            return 1
+
+    st = get_stats(args, conn, db_ok, sid)
     if args.snapshot:
         if st is not None and args.out:
             snapshot(args.out, st)
@@ -624,7 +648,7 @@ def main(argv=None):
         interval = max(0.5, args.watch)
         try:
             while True:
-                st, _c = get_stats(args)
+                st = get_stats(args, conn, db_ok, sid)
                 sys.stdout.write("\033[2J\033[H")  # 清屏+光标归位，无闪烁依赖
                 if st is None:
                     print("未找到模型请求数据（等待中…）")
