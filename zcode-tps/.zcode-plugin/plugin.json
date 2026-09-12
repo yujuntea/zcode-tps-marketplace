@@ -1,0 +1,9 @@
+{
+  "name": "zcode-tps",
+  "version": "0.2.0",
+  "description": "模型执行速度统计：/speed 展示当前会话最近请求与平均 tok/s、TTFT、缓存命中；--watch 内置终端实时刷新（按模型分段；只读本地 db，不写不联网）",
+  "author": {
+    "name": "yujuntea"
+  },
+  "commands": "./commands"
+}

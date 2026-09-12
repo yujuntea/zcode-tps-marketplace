@@ -1,0 +1,11 @@
+{
+  "name": "zcode-tps-market",
+  "plugins": [
+    {
+      "name": "zcode-tps",
+      "source": "./zcode-tps",
+      "version": "0.2.0",
+      "description": "模型执行速度统计：/speed 展示当前会话最近请求/平均 tok/s、TTFT、缓存命中（按模型分段）"
+    }
+  ]
+}
