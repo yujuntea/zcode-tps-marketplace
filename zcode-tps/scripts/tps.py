@@ -37,7 +37,9 @@ REQUIRED_DB_COLS = {
     "session_id", "model_id", "query_source", "status", "started_at",
     "first_token_at", "completed_at", "duration_ms", "output_tokens",
     "input_tokens", "cache_read_input_tokens", "time_to_first_token_ms",
+    "reasoning_tokens", "agent",
 }
+REQUIRED_TOOL_COLS = {"session_id", "status", "duration_ms"}
 
 # ---------------------------------------------------------------- db 基础
 
@@ -59,7 +61,15 @@ def db_usable(conn):
         if not row:
             return False
         cols = {r[1] for r in conn.execute("PRAGMA table_info(model_usage)")}
-        return REQUIRED_DB_COLS.issubset(cols)
+        if not REQUIRED_DB_COLS.issubset(cols):
+            return False
+        trow = conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='tool_usage'"
+        ).fetchone()
+        if not trow:
+            return False
+        tcols = {r[1] for r in conn.execute("PRAGMA table_info(tool_usage)")}
+        return REQUIRED_TOOL_COLS.issubset(tcols)
     except sqlite3.Error:
         return False
 
@@ -107,7 +117,7 @@ def session_row(conn, sid):
 
 
 def clean_title(t, n=44):
-    t = " ".join(str(t).split())
+    t = " ".join(str(t).split()).replace("|", "/")  # | 是 SwiftBar 菜单项参数分隔符
     return t if len(t) <= n else t[: n - 1] + "…"
 
 # ---------------------------------------------------------------- db 统计
@@ -595,7 +605,10 @@ def get_stats(args, conn=None, db_ok=False, sid=None):
             sid = pick_default_session(conn)
             if sid is None:
                 return None
-        return load_stats_db(conn, sid)
+        try:
+            return load_stats_db(conn, sid)
+        except sqlite3.Error:
+            pass  # schema 意外缺口 → 降级到 rollout 源
     return load_stats_rollout(args.session)
 
 
@@ -642,7 +655,10 @@ def main(argv=None):
             snapshot(args.out, st)
         return 0  # hook 场景始终成功
     if st is None:
-        print("未找到任何模型请求数据（db 无该表且 rollout 目录无 model-io 文件）", file=sys.stderr)
+        if db_ok:
+            print("本地数据库暂无模型请求记录（新安装的 ZCode 首次使用时会出现）", file=sys.stderr)
+        else:
+            print("未找到模型请求数据（无可用 db，rollout 目录亦无 model-io 文件）", file=sys.stderr)
         return 1
     if args.watch is not None:
         interval = max(0.5, args.watch)

@@ -113,15 +113,17 @@ python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 ```
 ⚡ ZCode 速度 — 会话「调研zcode自定义插件开发方案」 (数据源: db)
   当前模型      GLM-5.3-Flash
-  最近请求速度  48.6 tok/s · 1.4k tok / 27.9s decode · 0s前 [decode 口径]
-  会话平均      66.3 tok/s · 299 请求 · 240.3k tok (全部模型, 同集过滤)
+  最近请求速度  47.8 tok/s · 1.1k tok / 22.7s decode · 0s前 [decode 口径]
+  生成中速度    不可用(请求完成时才落库) — 生成中沿用最近请求值
+  会话平均      60.9 tok/s · 445 请求 · 334.6k tok (全部模型, 同集过滤)
   模型分段
-    GLM-5.3-Flash        44.0 tok/s · 135 请求 · 109.3k tok · TTFT 5.8s (样本99/135) · 回退27%
+    GLM-5.3-Flash        47.1 tok/s · 247 请求 · 172.1k tok · TTFT 6.4s (样本160/247) · 回退35%
+    k3-256k              49.8 tok/s ·  65 请求 ·  85.2k tok · TTFT 13.8s (样本58/65) · 回退11%
     GLM-5.3-HighSpeed   436.2 tok/s · 133 请求 ·  77.3k tok · TTFT 3.6s (样本96/133) · 回退28%
-    k3-256k              54.9 tok/s ·  31 请求 ·  53.7k tok · TTFT 12.4s (样本27/31) · 回退13%
-  工具用时 31m11s   模型用时 87m21s   子会话×5
-  缓存命中      96.5% (输入 56.2M, 命中 54.3M)
-  子代理        reviewer ×31: 54.9 tok/s
+  工具用时 50m02s   模型用时 2.3h   子会话×6
+  缓存命中      97.5% (输入 102.3M, 命中 99.8M)
+  子代理        reviewer ×65: 49.8 tok/s; vision-reader ×1: 60.3 tok/s
+  注            /speed 触发时最近请求=发起本次统计的请求(自指); 会话定位=最近完成请求所在根会话(--session 可指定)
 ```
 
 (Labels are in Chinese; the numbers are universal — tok/s, request counts, TTFT seconds, cache %.)
