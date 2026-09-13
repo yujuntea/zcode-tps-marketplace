@@ -55,6 +55,7 @@ Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from a
 - The menu bar shows a figure like `⚡ 497.0 tok/s`, **auto-refreshed every 3 seconds** — it ticks whenever the model completes a request
 - **Click it for a dropdown** with details: latest request (tokens / speed / age), current model, session average, per-model speed & TTFT, cache hit rate, tool time, current session title, plus a one-click Refresh
 - On multi-display setups the icon **follows the screen you are working on** — zero configuration
+- The figure belongs to the **session with the most recent model activity** (not necessarily the session you are viewing) — the dropdown's `会话:` line names it; after you send the first message in another session, the figure follows within seconds. See [Which session do the numbers belong to?](#which-session-do-the-numbers-belong-to)
 
 **One-time setup (~3 minutes):**
 
@@ -102,6 +103,8 @@ python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 
 `Ctrl+C` to stop; add `--panel` for the full-panel view. Or type `/speed --watch` and the plugin hands you this command.
 
+> This line follows the same rule as the menu bar: it tracks the **session with the most recent model activity**, with the session title at the end of the line marking ownership (merely switching sessions in ZCode does not change it). See [Which session do the numbers belong to?](#which-session-do-the-numbers-belong-to)
+
 ### Way 3: On-demand `/speed` (zero setup)
 
 ```
@@ -131,12 +134,26 @@ python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 
 (Labels are in Chinese; the numbers are universal — tok/s, request counts, TTFT seconds, cache %.)
 
+## Which session do the numbers belong to?
+
+The three ways to watch differ in which session the data belongs to:
+
+| View | Which session it reports | Where ownership is shown |
+|---|---|---|
+| `/speed` panel | The session **where you run the command** (the `/speed` call itself is that session's latest request, so it self-locates) | First line: `会话「…」` |
+| SwiftBar menu bar | The session with the **most recently completed model request** | Dropdown line `会话: …` |
+| Terminal `--watch` | The session with the **most recently completed model request** | Session title at the end of the line |
+
+The menu bar and the terminal line are **global singletons**, and ZCode currently provides no signal for "which session is being viewed" — switching sessions in the UI leaves no local trace (the plugin is read-only and hookless, so it cannot perceive it). They therefore follow the **latest activity**, not the UI focus: whichever session you send a message in, the figure switches to it within seconds of the request completing; merely switching views changes nothing.
+
+If the figure doesn't match the session you are looking at: check the ownership marker above to see which session it belongs to. To inspect a specific session, find its id via `/speed --list-sessions` (a unique id prefix is enough) and run `/speed --session <id>`.
+
 ## Measurement semantics (why the numbers are trustworthy)
 
 - **Per-request TPS** = `output_tokens / (completion − first_token)`, matching the decode-window semantics of [deepseek-harness](https://github.com/deepseek-ai/deepseek-harness). ~35% of requests lack a first-token timestamp in ZCode; those rows **fall back** to `output_tokens / total_duration` (denominator includes TTFT, so slightly lower) and are labeled with the fallback share.
 - **Session average** applies **same-set filtering** — only rows having both token count and decode duration count toward numerator AND denominator — avoiding a ~10% systematic overestimate.
 - Model grouping keys are lower-cased (the database stores `GLM-5.3` / `glm-5.3` variants).
-- Session location = the root session of the most recently completed request (recursive `parent_id` walk); subagent sessions aggregate as a tree.
+- Session location = the root session of the most recently completed request (recursive `parent_id` walk); subagent sessions aggregate as a tree (the `/speed` panel is equivalent to reporting the session you run it in — see [Which session do the numbers belong to?](#which-session-do-the-numbers-belong-to))
 - Only `main_turn` / `subagent` requests count — compaction and title-generation requests are excluded.
 
 ## Privacy & safety
@@ -147,6 +164,7 @@ python3 ~/.zcode/plugins-data/zcode-tps/tps.py --watch
 ## Known limitations
 
 - ZCode persists request rows **on completion** (nothing observable during streaming), so live refresh is per-request granularity; while generating, the last speed is shown.
+- The menu bar / terminal line follow the **session with the most recent model activity**, not the session currently viewed in ZCode (session switches leave no local signal the plugin could sense — see [Which session do the numbers belong to?](#which-session-do-the-numbers-belong-to)); use `--session <id>` to inspect a specific session.
 - ~35% of requests lack first-token timing; the fallback figure runs low and is labeled.
 - The database is an internal ZCode implementation; if a ZCode upgrade breaks stats, update the plugin — the script probes the schema and degrades gracefully.
 
