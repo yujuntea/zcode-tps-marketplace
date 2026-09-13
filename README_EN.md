@@ -57,6 +57,9 @@ Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from a
 - **Click it for a dropdown** with details: latest request (tokens / speed / age), current model, session average, per-model speed & TTFT, cache hit rate, tool time, current session title, plus a one-click Refresh
 - On multi-display setups the icon **follows the screen you are working on** — zero configuration
 
+![SwiftBar dropdown details](docs/swiftbar-dropdown.png)
+*The dropdown behind the menu-bar ⚡: latest request, current model, session average, per-model breakdown, one-click refresh*
+
 **One-time setup (~3 minutes):**
 
 1. **Generate the menu-bar script**: in a ZCode session, type:
