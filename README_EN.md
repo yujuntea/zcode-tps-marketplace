@@ -5,10 +5,13 @@
 See your model's real-time execution speed right inside [ZCode](https://zcode.z.ai): **current request tok/s, per-session average, per-model breakdown, TTFT (time-to-first-token), and cache hit rate** — with multi-session isolation and subagent aggregation.
 
 ![Live speed in the macOS menu bar](docs/menubar.png)
-*Menu-bar speed via SwiftBar: the figure ticks whenever the model completes a request — visible from any app*
+*Menu-bar speed via SwiftBar — the figure ticks whenever the model completes a request, visible from any app*
 
-![/speed stats panel](docs/panel.png)
-*The `/speed` panel: per-model breakdown, TTFT, cache hit rate, subagent aggregation*
+<p>
+  <img src="docs/panel.png" alt="/speed stats panel" width="59%">
+  <img src="docs/swiftbar-dropdown.png" alt="Dropdown details behind the menu-bar item" width="39%">
+</p>
+*Left: the `/speed` panel (on-demand, in-session); right: the dropdown behind the menu-bar ⚡ (live details + one-click refresh)*
 
 ## Why this plugin
 
@@ -47,18 +50,13 @@ After installing, set up the **SwiftBar menu bar speed** below — it's the most
 
 ### Way 1: macOS menu bar, always visible (SwiftBar — recommended)
 
-Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from any app:
-
-![Menu bar speed](docs/menubar.png)
+Once set up, a live `⚡ tok/s` figure sits in your **menu bar**, visible from any app (see the screenshots at the top):
 
 **What you get:**
 
 - The menu bar shows a figure like `⚡ 497.0 tok/s`, **auto-refreshed every 3 seconds** — it ticks whenever the model completes a request
 - **Click it for a dropdown** with details: latest request (tokens / speed / age), current model, session average, per-model speed & TTFT, cache hit rate, tool time, current session title, plus a one-click Refresh
 - On multi-display setups the icon **follows the screen you are working on** — zero configuration
-
-![SwiftBar dropdown details](docs/swiftbar-dropdown.png)
-*The dropdown behind the menu-bar ⚡: latest request, current model, session average, per-model breakdown, one-click refresh*
 
 **One-time setup (~3 minutes):**
 
