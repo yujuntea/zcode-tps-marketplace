@@ -7,11 +7,9 @@ See your model's real-time execution speed right inside [ZCode](https://zcode.z.
 ![Live speed in the macOS menu bar](docs/menubar.png)
 *Menu-bar speed via SwiftBar — the figure ticks whenever the model completes a request, visible from any app*
 
-<p>
-  <img src="docs/panel.png" alt="/speed stats panel" width="59%">
-  <img src="docs/swiftbar-dropdown.png" alt="Dropdown details behind the menu-bar item" width="39%">
-</p>
-*Left: the `/speed` panel (on-demand, in-session); right: the dropdown behind the menu-bar ⚡ (live details + one-click refresh)*
+| The `/speed` panel (on-demand, in-session) | Dropdown behind the menu-bar ⚡ (live details + one-click refresh) |
+|:---:|:---:|
+| ![`/speed` stats panel](docs/panel.png) | ![Dropdown details](docs/swiftbar-dropdown.png) |
 
 ## Why this plugin
 

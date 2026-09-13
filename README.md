@@ -7,11 +7,9 @@
 ![macOS 菜单栏常驻实时速度](docs/menubar.png)
 *菜单栏常驻实时速度（SwiftBar 方式）——模型每完成一次请求，数字即自动更新，任何应用下抬头可见*
 
-<p>
-  <img src="docs/panel.png" alt="/speed 统计面板" width="59%">
-  <img src="docs/swiftbar-dropdown.png" alt="点击菜单栏 ⚡ 的下拉明细" width="39%">
-</p>
-*左：`/speed` 统计面板（会话内按需查看）；右：点击菜单栏 ⚡ 展开的下拉明细（实时明细 + 一键刷新）*
+| `/speed` 统计面板（会话内按需查看） | 点击菜单栏 ⚡ 展开的下拉明细（实时明细 + 一键刷新） |
+|:---:|:---:|
+| ![`/speed` 统计面板](docs/panel.png) | ![点击菜单栏 ⚡ 的下拉明细](docs/swiftbar-dropdown.png) |
 
 ## 它解决什么问题
 
