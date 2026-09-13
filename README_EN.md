@@ -4,7 +4,11 @@
 
 See your model's real-time execution speed right inside [ZCode](https://zcode.z.ai): **current request tok/s, per-session average, per-model breakdown, TTFT (time-to-first-token), and cache hit rate** — with multi-session isolation and subagent aggregation.
 
+![Live speed in the macOS menu bar](docs/menubar.png)
+*Menu-bar speed via SwiftBar: the figure ticks whenever the model completes a request — visible from any app*
+
 ![/speed stats panel](docs/panel.png)
+*The `/speed` panel: per-model breakdown, TTFT, cache hit rate, subagent aggregation*
 
 ## Why this plugin
 
